@@ -29,7 +29,7 @@ private:
     int getSensorData();
 
 private:
-    Data data;
+    Data data, data_for_share;
 
     std::thread publishThread;
 

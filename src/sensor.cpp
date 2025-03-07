@@ -38,7 +38,7 @@ void Sensor::poll() {
     data = getSensorData();
 
     std::lock_guard<std::mutex> lock(data_mutex);
-
+    data_for_share = data;
     data_ready = true;
     data_cond.notify_one();
 }
@@ -52,7 +52,7 @@ void Sensor::publish() {
         // sleep for 2 second
         std::this_thread::sleep_for(std::chrono::seconds(2));
 
-        std::cout << "publish topic - " << data << std::endl;
+        std::cout << "publish topic - " << data_for_share << std::endl;
         data_ready = false;
     }
 }
