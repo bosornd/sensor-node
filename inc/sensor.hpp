@@ -29,7 +29,10 @@ private:
     int getSensorData();
 
 private:
-    Data data, data_for_share;
+    // simple circular queue
+    int current = 0;
+    const int size_of_queue = 5;
+    Data queue[5];
 
     std::thread publishThread;
 

@@ -35,10 +35,10 @@ int Sensor::getSensorData() {
 }
 
 void Sensor::poll() {
-    data = getSensorData();
+    queue[current] = getSensorData();
 
     std::lock_guard<std::mutex> lock(data_mutex);
-    data_for_share = data;
+    current = (current + 1) % size_of_queue;
     data_ready = true;
     data_cond.notify_one();
 }
@@ -51,8 +51,8 @@ void Sensor::publish() {
         // simulate as if it takes a long time.
         // sleep for 2 second
         std::this_thread::sleep_for(std::chrono::seconds(2));
-
-        std::cout << "publish topic - " << data_for_share << std::endl;
+        int index = (current - 1 + size_of_queue) % size_of_queue;
+        std::cout << "publish topic - " << queue[index] << std::endl;
         data_ready = false;
     }
 }

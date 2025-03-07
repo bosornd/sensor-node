@@ -6,24 +6,27 @@
 
 ![Flow Diagram](img/flow.png)
 
-Two threads are running concurrently and share data. But the data for share is different from the data that is written by sensor. It's synchronized using lock. A race condition doesn't occur as shown below.
+Two threads are running concurrently and share data. But the created buffer in circular queue is re-used. Therefore, no more additional copy is required.
 
 ```
 $ sensor-node
 1
 Data processed
-Data copied
 2
 Data processed
 publish topic - 1
-Data copied
 3
 Data processed
 publish topic - 2
-Data copied
 publish topic - 3
 ```
-However additional data copies can cause performance degradation, especially when the data size is large or the frequency is high.
+
+## Design Issue
+Sensor object is executed by main-thread and pub-thread. poll() and getSensorData() should only be executed by main-thread, and publish() should only be executed by pub-thread. Since one object is used by multiple threads, it is easy to cause a racing condition by incorrectly using member variables and functions.
+
+This also violates SRP (Single Responsibility Principle) by not distinguishing between the responsibility of acquiring data from the sensor and the responsibility of publishing a topic.
+
+![Deployment View](img/deployment.png)
 
 ## Project Structure
 
