@@ -44,6 +44,14 @@ The deployment of the components in the thread level is as follows.
 
 As you can see in the figure, the components executed by the threads are clearly separated, and it is also clearly shown that communication between threads goes through only the queue.
 
+### Previous Designs
+
+- Sharing Single Variable ([branch: racing-condition](https://github.com/bosornd/sensor-node/tree/racing-condition)): Demonstrates a racing condition occurring due to multiple threads sharing a single variable.
+
+- Adding Shared Variable ([branch: buffer-for-share](https://github.com/bosornd/sensor-node/tree/buffer-for-share)): Prevents racing conditions by adding a shared variable. This approach introduces a performance overhead due to data copying. See [design document](https://github.com/bosornd/sensor-node/blob/main/doc/AD_001.%20Use%20circular%20queue%20to%20remove%20unnecessary%20copies.md) for details.
+
+- Using Circular Queue ([branch: circular-queue](https://github.com/bosornd/sensor-node/tree/circular-queue)): Eliminates data copying by using a Circular Queue. This implementation still has the potential for introducing a racing condition due to the main thread and pub thread sharing the sensor object. See [design document](https://github.com/bosornd/sensor-node/blob/main/doc/AD_002.%20Clearly%20separate%20between%20sensor%20and%20publisher%20roles.md) for details.
+
 ## Project Structure
 
 - `CMakeLists.txt`: CMake configuration file for building the project.
